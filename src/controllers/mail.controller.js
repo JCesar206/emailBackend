@@ -3,30 +3,45 @@ import db from "../config/db.js";
 export const sendMail = async (req, res) => {
 	try {
 		const { receiver_email, subject, body } = req.body;
+		const files = req.files || [];
 
 		if(!receiver_email || !subject || !body) {
 			return res.status(400).json({ message: "❌ Datos incompletos" });
 		}
-		// Verificar que el receptor exista
-		const [receiver] = await db.query(
-			"SELECT id FROM users WHERE email=?",
-			[receiver_email]
-		);
-
-		if (!receiver.length) {
-			return res.status(400).json({ error: "❌ El receptor no existe" });
-		}
-
-		await db.query(
+		// Crear mail
+		const [result] = await db.query(
 			"INSERT INTO mails (sender_id, receiver_email, subject, body) VALUES (?,?,?,?)",
 			[req.user.id, receiver_email, subject, body]
 		);
+		
+		const mailId = result.insertId;
 
+		// Guardar adjuntos
+		for (const file of files) {
+			await db.query("INSERT INTO mail_attachments (mail_id, filename, original_name, mime_type) VALUES (?,?,?,?)",
+				[mailId, file.filename, file.originalname, file.mimetype]
+			);
+		}
 		res.json({ message: "Correo enviado" });
 	} catch (error) {
 		console.error(error);
 		res.status(500).json({ error: "❌ Error al enviar correo" });
 	}
+};
+
+export const mailDetail = async (req, res) => {
+	const { id } = req.params;
+	const [mailRows] = await db.query("SELECT * FROM mails WHERE id=?", [id]);
+	if (!mailRows.length) {
+		return res.status(404).json({ message: "Correo no encontrado" });
+	}
+
+	const [attachments] = await db.query("SELECT filename, original_name FROM mail_attachments WHERE mail_id=?", [id]);
+
+	res.json({
+		...mailRows[0],
+		attachments
+	});
 };
 
 export const inbox = async (req, res) => {
