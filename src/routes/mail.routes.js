@@ -1,11 +1,11 @@
 import { Router } from "express";
+import { sendMail, getInbox } from "../controllers/mail.controller.js";
 import auth from "../middlewares/auth.js";
-import { sendMail, inbox, mailDetail } from "../controllers/mail.controller.js";
+import upload from "../middlewares/upload.js";
 
 const router = Router();
 
+router.get("/", auth, getInbox);
 router.post("/", auth, upload.array("attachments"), sendMail);
-router.get("/", auth, inbox);
-router.get("/:id", auth, mailDetail);
 
 export default router;
