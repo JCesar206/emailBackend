@@ -44,7 +44,7 @@ export const mailDetail = async (req, res) => {
 	});
 };
 
-export const inbox = async (req, res) => {
+export const getInbox = async (req, res) => {
 	try {
 		// Obtener email del usuario autenticado
 		const [userRows] = await db.query(
@@ -68,5 +68,5 @@ export const inbox = async (req, res) => {
 	}
 };
 // sendMail: Valida datos, Verifica que el receptor exista, Inserta correo de forma segura, Maneja errores con try/catch
-// inbox: Obtiene el email real del usuario autenticado, Busca correos recibidos, Ordena por fecha descendente, Nunca rompe si no hay correos
+// getInbox: Obtiene el email real del usuario autenticado, Busca correos recibidos, Ordena por fecha descendente, Nunca rompe si no hay correos
 // Este archivo ya es: Seguro, Estable, Escalable, Sin errores silenciosos
