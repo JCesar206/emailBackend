@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const authMiddleware = (req, res, next) => {
+const auth = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   // Log temporal para depuración
@@ -34,4 +34,4 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+export default auth;
