@@ -36,3 +36,15 @@ CREATE TABLE mail_attachments (
 	FOREIGN KEY (mail_id) REFERENCES mails(id)
 	ON DELETE CASCADE
 );
+
+ALTER TABLE mails
+ADD COLUMN is_read TINYINT(1) DEFAULT 0;
+
+CREATE TABLE folders (
+	id INT AUTO_INCREMENT PRIMARY KEY,
+	user_id INT NOT NULL,
+	name VARCHAR(50) NOT NULL
+);
+
+ALTER TABLE mails 
+ADD COLUMN folder_id INT NULL;
