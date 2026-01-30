@@ -1,3 +1,4 @@
+import "dotenv/config";
 import mysql from "mysql2/promise";
 import logger from "./logger.js";
 
@@ -11,9 +12,16 @@ const pool = mysql.createPool({
 	queueLimit: 0
 });
 
-pool.getConnection()
-	.then(() => logger.info("✅ MySQL conectado"))
-	.catch(err => logger.error(err.message));
+// Verificación de conexión (sin bloquear el pool)
+(async () => {
+	try {
+		const connection = await pool.getConnection();
+		logger.info("✅ MySQL conectado correctamente");
+		connection.release();
+	} catch (error) {
+		logger.error("❌ Error conectando a MySQL", error.message);
+	}
+})();
 
 export default pool;
 // Explicación: Usamos pool para eficiencia, Conexión validada al iniciar, Logs claros si algo falla
