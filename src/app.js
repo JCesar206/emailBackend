@@ -4,6 +4,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.routes.js";
 import mailRoutes from "./routes/mail.routes.js";
 import logger from "./config/logger.js";
+import folderRoutes from "./routes/folder.routes.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(morgan("dev"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/mail", mailRoutes);
+app.use("/api/folders", folderRoutes);
 
 // Middleware de errores CORRECTO
 app.use((err, req, res, next) => {
