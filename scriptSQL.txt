@@ -48,3 +48,9 @@ CREATE TABLE folders (
 
 ALTER TABLE mails 
 ADD COLUMN folder_id INT NULL;
+// Insertar usuarios d eprueba
+INSERT INTO users (email, password) VALUES
+('user1@test.com', '$2b$10$CwTycUXWue0Thq9StjUM0uJ8KX9GQF4iZ9erjRzCQXDpUe1koXSPG'),
+('user2@test.com', '$2b$10$CwTycUXWue0Thq9StjUM0uJ8KX9GQF4iZ9erjRzCQXDpUe1koXSPG');
+// Probar la inserción de usuarios
+SELECT id, email FROM users;
