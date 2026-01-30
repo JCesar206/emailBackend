@@ -67,6 +67,23 @@ export const getInbox = async (req, res) => {
 		res.status(500).json({ error: "❌ Error interno al obtener inbox" });
 	}
 };
+
+export const moveToFolder = async (req, res) => {
+	try {
+		const { id } = req.params;
+		const { folder_id } = req.body;
+
+		await db.query(
+			"UPDATE mails SET folder_id=? WHERE id=? AND sender_id=?",
+			[folder_id, id, req.user.id]
+		);
+		res.json({ message: "Correo movido" });
+	} catch (error) {
+		console.error("Error moveToFolder:", error);
+		res.status(500).json({ message: "Error al mover correo" });
+	}
+};
+
 // sendMail: Valida datos, Verifica que el receptor exista, Inserta correo de forma segura, Maneja errores con try/catch
 // getInbox: Obtiene el email real del usuario autenticado, Busca correos recibidos, Ordena por fecha descendente, Nunca rompe si no hay correos
 // Este archivo ya es: Seguro, Estable, Escalable, Sin errores silenciosos
